@@ -1,0 +1,17 @@
+{
+  "manifest_version": 2,
+
+  "name": "P4ssw0rdBeach",
+  "description": "This is an extension to show you whether the password of this website is protected",
+  "version": "1.0",
+
+  "background": {
+    "scripts": ["background.js", "jquery-1.11.1.min.js", "purl.js"],
+    "persistent": false
+  },
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "notifications"
+  ]
+}
