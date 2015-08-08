@@ -2,18 +2,30 @@
 // Use of this source code is governed by a MIT license that can be
 // found in the LICENSE file.
 
-var SERVER_URL = "SERVER_URL?";
+var SERVER_URL = "https://api.parse.com/1/functions/checkSite";
 
 function examinURL(url) {
     if (url.lastIndexOf("chrome://", 0) !== 0) {
         var _url = $.url(url);
         var _host = _url.attr('host');
 
-        $.get(SERVER_URL + _host, function(ret){
-            if (ret.result === "True") {
-                showNotification(_host, ret.blogLink);
+        $.ajax({
+            url: SERVER_URL,
+            type: 'post',
+            data: {
+                host: _host
+            },
+            headers: {
+                "X-Parse-Application-Id": 'XnAAlFezFWCLdH6JhPSwpLxHZ0RPZ0lWkPzw4vgn',
+                "X-Parse-REST-API-Key": 'lU5DnlKlkfQEasqKinwjqSyOYXegHbBNB8S8qi85'
+            },
+            dataType: 'json',
+            success: function (ret) {
+                if (ret.result.plainPwd === "True") {
+                    showNotification(_host, ret.result.blogLink);
+                }
             }
-        }, 'json');
+        });
     }
 }
 
@@ -25,7 +37,7 @@ function showNotification(siteUrl, link) {
         iconUrl: "icon.png",
         buttons: [{"title": "Go to blog page"}],
     };
-    chrome.notifications.create('', opt, function(id) {});
+    chrome.notifications.create(null, opt, function(id) {});
     chrome.notifications.onButtonClicked.addListener(function(notificationId, buttonIndex) {
         if (buttonIndex === 0) {
             window.open(link);
